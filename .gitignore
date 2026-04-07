@@ -1,0 +1,11 @@
+gitignore
+
+# Environment variables
+.env
+
+# AWS credentials
+.aws/
+
+# Go build files
+bin/
+*.exe
