@@ -25,7 +25,7 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 # Copy the build binary from the build stage
-COPY --from=build /app/notification-app /app/notification-service
+COPY --from=build /app/notification-service /app/notification-service
 
 # Copy the .env file (optional, depending on your app's configuration)
 COPY .env /app/.env
@@ -34,4 +34,4 @@ COPY .env /app/.env
 EXPOSE 8080
 
 # Command to run the app
-CMD ["./notification-app"]
+CMD ["./notification-service"]
