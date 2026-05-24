@@ -1,11 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
+	"notification-service/client"
 	"notification-service/config"
 	"notification-service/mail"
 	"notification-service/message"
 )
+
+type Message struct {
+	Message    string `json:"message"`
+	CustomerId string `json:"customer_id"`
+}
 
 func main() {
 
@@ -27,8 +34,20 @@ func main() {
 
 		for _, message := range messages {
 
-			// TODO: an email has been written for now, it will be readen from customer-service later
-			err := emailSender.SendEMail("yourmail@gmail.com", "You have a new order", *message.Body)
+			log.Printf("RAW SQS BODY: %s", *message.Body)
+
+			var messageBody Message
+
+			err := json.Unmarshal([]byte(*message.Body), &messageBody)
+			if err != nil {
+				log.Printf("message body parse edilemedi: %v", err)
+			}
+			customer, err := client.CustomerServiceRequest(messageBody.CustomerId)
+			if err != nil {
+				log.Printf("customer istegi atilamadi: %v", err)
+				continue
+			}
+			err = emailSender.SendEMail(customer.Email, "You have a new order", *message.Body)
 
 			if err != nil {
 				log.Printf("error: %v", err)
