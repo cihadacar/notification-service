@@ -47,7 +47,7 @@ func main() {
 				log.Printf("customer istegi atilamadi: %v", err)
 				continue
 			}
-			err = emailSender.SendEMail(customer.Email, "You have a new order", *message.Body)
+			err = emailSender.SendEMail(customer.Email, "You have a new order", messageBody.Message)
 
 			if err != nil {
 				log.Printf("error: %v", err)
